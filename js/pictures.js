@@ -10,7 +10,6 @@ var postTemplate = document.querySelector('#picture')
 .querySelector('.picture__link');
 var similarListElement = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
-var commentsElement = document.querySelector('.social__comment');
 var commentsContainer = document.querySelector('.social__comments');
 var socialCommentCounter = document.querySelector('.social__comment-count');
 var socialLoadMore = document.querySelector('.social__loadmore');
@@ -33,7 +32,7 @@ var descriptions = [
   'Вот это тачка!'
 ];
 
-//Utils
+// Utils
 var getRandomFromArr = function (arr) {
   for (var i = 0; i < arr.length; i++) {
     var generatedProperty = arr[Math.floor(Math.random() * (arr.length - 0)) + 0];
@@ -67,7 +66,7 @@ var getRandomAvatar = function () {
   return 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
 };
 
-//Создание массива постов
+// Создание массива постов
 var posts = [];
 var generateAllPosts = function () {
   for (var i = 0; i < MAX_POSTS; i++) {
@@ -76,11 +75,11 @@ var generateAllPosts = function () {
       likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
       comments: generateComment(),
       description: getRandomFromArr(descriptions)
-    }
+    };
   }
 };
 
-//Отрисовка постов
+// Отрисовка постов
 var renderPictures = function () {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < MAX_POSTS; i++) {
@@ -91,7 +90,7 @@ var renderPictures = function () {
     postElement.querySelector('.picture__stat--comments').textContent = posts[i].comments.length;
 
     fragment.appendChild(postElement);
-  };
+  }
 
   similarListElement.appendChild(fragment);
 };
@@ -101,7 +100,6 @@ var renderBigPicture = function () {
   bigPicture.querySelector('.big-picture__img img').src = posts[0].url;
   bigPicture.querySelector('.likes-count').textContent = posts[0].likes;
   bigPicture.querySelector('.comments-count').textContent - posts[0].comments.length;
-  bigPicture.querySelector('.social__picture').src = getRandomAvatar();
   bigPicture.querySelector('.social__caption').textContent = posts[0].description;
 
   // Удаляем старые комментарии
@@ -110,9 +108,9 @@ var renderBigPicture = function () {
     commentsContainer.removeChild(commentsToRemove[i]);
   }
 
-  //Отображаем новые комментарии
+  // Отображаем новые комментарии
   var randomTimes = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
-  for (var i = 0; i < randomTimes; i++) {
+  for (i = 0; i < randomTimes; i++) {
     var newComment = document.createElement('li');
     newComment.classList.add('social__comment');
     commentsContainer.appendChild(newComment);
