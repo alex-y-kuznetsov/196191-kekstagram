@@ -1,5 +1,11 @@
 'use strict';
 
+var MAX_POSTS = 25;
+var MIN_LIKES = 15;
+var MAX_LIKES = 200;
+var MIN_COMMENTS = 1;
+var MAX_COMMENTS = 2;
+
 var sentences = [
   'Всё отлично!',
   'В целом всё неплохо. Но не всё.',
@@ -30,38 +36,47 @@ var getRandomNumber = function (min, max) {
   return randomNumber;
 };
 
-// var getUniqueNumbers = function () {
-//   var uniqueNumbers = [];
-//   var uniqueNumber = 0;
-//   while (uniqueNumbers.length <= 25) {
-//     uniqueNumber = Math.floor(Math.random() * 25);
-//     if (uniqueNumbers.indexOf(uniqueNumber) == -1) {
-//       uniqueNumbers.push(uniqueNumber);
-//     }
-//   }
-//   console.log(uniqueNumbers);
-//   return uniqueNumbers;
-// };
+var generateComment = function () {
+  var randomTimes = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
+  var comment ='';
+  for (var i = 0; i < randomTimes; i++) {
+    comment = comment + ' ' + getRandomFromArr(sentences);
+  }
+  return comment;
+};
 
+var uniqueUrls = [];
 var getUniqueUrls = function () {
-  var uniqueUrls = [];
-  for (var i = 0; i < 25; i++) {
-    var newUrl = 'photos/' + getRandomNumber(1, 25) + '.jpg';
+  for (var i = 0; uniqueUrls.length < MAX_POSTS; i++) {
+    var newUrl = 'photos/' + getRandomNumber(1, MAX_POSTS) + '.jpg';
     if (uniqueUrls.indexOf(newUrl) == -1) {
-      uniqueUrls[i] = newUrl;
+      uniqueUrls.push(newUrl);
     }
   }
-  console.log(uniqueUrls);
   return uniqueUrls;
 };
 
-getUniqueUrls();
+var generatePost = function () {
+  getUniqueUrls();
+  for (var i = 0; i < uniqueUrls.length; i++) {
+    var post = {
+      url: uniqueUrls[i],
+      likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
+      comments: generateComment(),
+      description: getRandomFromArr(descriptions)
+    }
+  }
+  // console.log(post);
+  return post;
+};
+// generatePost(); На этом этапе все нормально - генерится случайный пост со случайным УРЛ
 
-// var generatePost = function () {
-//   var post = {
-//     url: ,
-//     likes: ,
-//     comments: ,
-//     description:
-//   }
-// };
+var posts = [];
+var generateAllPosts = function () {
+  for (var i = 0; i < MAX_POSTS; i++) {
+    posts.push(generatePost())
+  }
+};
+
+generateAllPosts(); // Тут все ломается и генерится один и тот же УРЛ во всех постах.
+console.log(posts);
