@@ -61,7 +61,7 @@ var removeHidden = function (elem) {
 
 var addHidden = function (elem) {
   elem.classList.add('visually-hidden');
-}
+};
 
 var getRandomAvatar = function () {
   return 'img/avatar-' + getRandomNumber(1, 6) + '.svg';
