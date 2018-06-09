@@ -99,7 +99,7 @@ var renderPictures = function () {
 var renderBigPicture = function () {
   bigPicture.querySelector('.big-picture__img img').src = posts[0].url;
   bigPicture.querySelector('.likes-count').textContent = posts[0].likes;
-  bigPicture.querySelector('.comments-count').textContent - posts[0].comments.length;
+  bigPicture.querySelector('.comments-count').textContent = posts[0].comments.length;
   bigPicture.querySelector('.social__caption').textContent = posts[0].description;
 
   // Удаляем старые комментарии
