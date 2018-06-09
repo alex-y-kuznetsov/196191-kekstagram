@@ -32,7 +32,7 @@ var descriptions = [
 
 // Utils
 var getRandomFromArr = function (arr) {
-    return arr[Math.floor(Math.random() * (arr.length - 0)) + 0];
+  return arr[Math.floor(Math.random() * (arr.length - 0)) + 0];
 };
 
 var getRandomNumber = function (min, max) {
@@ -100,7 +100,7 @@ var renderBigPicture = function () {
   var commentsToRemove = commentsContainer.querySelectorAll('.social__comment');
   commentsToRemove.forEach(function (comment) {
     commentsContainer.removeChild(comment);
-  })
+  });
 
   // Отображаем новые комментарии
   var randomTimes = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
