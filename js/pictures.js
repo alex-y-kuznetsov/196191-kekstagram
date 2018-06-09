@@ -5,9 +5,7 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var MIN_COMMENTS = 1;
 var MAX_COMMENTS = 2;
-var postTemplate = document.querySelector('#picture')
-.content
-.querySelector('.picture__link');
+var postTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
 var similarListElement = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
 var commentsContainer = document.querySelector('.social__comments');
@@ -34,15 +32,11 @@ var descriptions = [
 
 // Utils
 var getRandomFromArr = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
-    var generatedProperty = arr[Math.floor(Math.random() * (arr.length - 0)) + 0];
-  }
-  return generatedProperty;
+    return arr[Math.floor(Math.random() * (arr.length - 0)) + 0];
 };
 
 var getRandomNumber = function (min, max) {
-  var randomNumber = Math.floor(Math.random() * (max + 1 - min)) + min;
-  return randomNumber;
+  return Math.floor(Math.random() * (max + 1 - min)) + min;
 };
 
 var postComment = [];
@@ -104,13 +98,13 @@ var renderBigPicture = function () {
 
   // Удаляем старые комментарии
   var commentsToRemove = commentsContainer.querySelectorAll('.social__comment');
-  for (var i = 0; i < commentsToRemove.length; i++) {
-    commentsContainer.removeChild(commentsToRemove[i]);
-  }
+  commentsToRemove.forEach(function (comment) {
+    commentsContainer.removeChild(comment);
+  })
 
   // Отображаем новые комментарии
   var randomTimes = getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
-  for (i = 0; i < randomTimes; i++) {
+  for (var i = 0; i < randomTimes; i++) {
     var newComment = document.createElement('li');
     newComment.classList.add('social__comment');
     commentsContainer.appendChild(newComment);
