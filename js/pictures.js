@@ -156,7 +156,7 @@ var closePictureEditorHandler = function () {
 };
 
 var escPictureEditorHandler = function (evt) {
-  if (evt.keyCode === ESC_KEY) {
+  if (evt.keyCode === ESC_KEY && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
     addHidden(pictureEditor);
   }
 };
@@ -223,3 +223,35 @@ var pictureFilterHandler = function (evt) {
 for (var i = 0; i < pictuteEffectModes.length; i++) {
   pictuteEffectModes[i].addEventListener('click', pictureFilterHandler);
 };
+
+// Определение глубины эффекта
+var scalePin = pictureEditor.querySelector('.scale__pin');
+
+var filterDepthHandler = function (evt) { // ??
+  var scalePinStartX = 456;
+  var scalePinEndX = evt.x;
+  var scalePinPath;
+  if (scalePinEndX > scalePinStartX) {
+    scalePinPath = scalePinEndX + scalePinStartX;
+  } else if (scalePinEndX < scalePinStartX) {
+    scalePinPath = scalePinEndX - scalePinStartX;
+  } else {
+    scalePinPath = 0;
+  }
+};
+
+scalePin.addEventListener('mouseup', filterDepthHandler);
+
+// Валидация
+var hashtagInput = pictureEditor.querySelector('.text__hashtags');
+var commentInput = pictureEditor.querySelector('.text__description');
+
+commentInput.addEventListener('invalid', function () {
+  if (commentInput.validity.tooLong) {
+    commentInput.setCustomValidity('Максимальное число знаков 140');
+  } else {
+    commentInput.setCustomValidity('');
+  }
+});
+
+console.log(hashtagInput.validity);
