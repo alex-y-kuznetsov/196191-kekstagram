@@ -53,6 +53,10 @@ var removeHidden = function (elem) {
 };
 
 var addHidden = function (elem) {
+  elem.classList.add('hidden');
+};
+
+var addVisuallyHidden = function (elem) {
   elem.classList.add('visually-hidden');
 };
 
@@ -126,7 +130,96 @@ var renderBigPicture = function () {
 
 generateAllPosts();
 renderPictures();
-removeHidden(bigPicture);
+// removeHidden(bigPicture);
 renderBigPicture();
-addHidden(socialCommentCounter);
-addHidden(socialLoadMore);
+addVisuallyHidden(socialCommentCounter);
+addVisuallyHidden(socialLoadMore);
+
+// Загрузка изображения и показ формы редактирования
+var ESC_KEY = 27;
+var ENTER_KEY = 13;
+var uploadPicture = document.querySelector('#upload-file');
+var pictureEditor = document.querySelector('.img-upload__overlay');
+var pictureEditorClose = document.querySelector('.img-upload__cancel');
+var sizeValue = pictureEditor.querySelector('.resize__control--value');
+
+var openPictureEditorHandler = function () {
+  sizeValue.value = '100%';
+  removeHidden(pictureEditor);
+  document.addEventListener('keydown', escPictureEditorHandler)
+};
+
+var closePictureEditorHandler = function () {
+  addHidden(pictureEditor);
+  pictureEditorClose.removeEventListener('keydown', escPictureEditorHandler);
+  uploadPicture.innerHtml = '';
+};
+
+var escPictureEditorHandler = function (evt) {
+  if (evt.keyCode === ESC_KEY) {
+    addHidden(pictureEditor);
+  }
+};
+
+uploadPicture.addEventListener('change', openPictureEditorHandler);
+pictureEditorClose.addEventListener('click', closePictureEditorHandler);
+
+// Изменение размера изображения
+var scalePin = pictureEditor.querySelector('.scale__pin');
+var sizeMinus = pictureEditor.querySelector('.resize__control--minus');
+var sizePlus = pictureEditor.querySelector('.resize__control--plus');
+var uploadPreview = pictureEditor.querySelector('.img-upload__preview');
+var previewImage = pictureEditor.querySelector('.img-upload__preview > img');
+
+var pictureScale = 1;
+var sizeMinusHandler = function () {
+  if (pictureScale > 0.25) {
+    sizeValue.value = ((+(sizeValue.value.slice(0, -1)) - 25).toString() + '%');
+    uploadPreview.style = 'transform:scale(' + (pictureScale - 0.25) + ')';
+    pictureScale -= 0.25;
+  }
+};
+var sizePlusHandler = function () {
+  if (pictureScale < 1) {
+    sizeValue.value = ((+(sizeValue.value.slice(0, -1)) + 25).toString() + '%');
+    uploadPreview.style = 'transform:scale(' + (pictureScale + 0.25) + ')';
+    pictureScale += 0.25;
+  }
+};
+
+sizeMinus.addEventListener('click', sizeMinusHandler);
+sizePlus.addEventListener('click', sizePlusHandler);
+
+// Наложение эффекта на изображение
+var pictuteEffectModes = pictureEditor.querySelectorAll('.effects__radio');
+
+var pictureFilterHandler = function (evt) {
+  switch(evt.target.id) {
+    case 'effect-chrome':
+      previewImage.classList = '';
+      previewImage.classList.add('effects__preview--chrome');
+      break;
+    case 'effect-sepia':
+      previewImage.classList = '';
+      previewImage.classList.add('effects__preview--sepia');
+      break;
+    case 'effect-marvin':
+      previewImage.classList = '';
+      previewImage.classList.add('effects__preview--marvin');
+      break;
+    case 'effect-phobos':
+      previewImage.classList = '';
+      previewImage.classList.add('effects__preview--phobos');
+      break;
+    case 'effect-heat':
+      previewImage.classList = '';
+      previewImage.classList.add('effects__preview--heat');
+      break;
+    default:
+      previewImage.classList = '';
+  }
+};
+
+for (var i = 0; i < pictuteEffectModes.length; i++) {
+  pictuteEffectModes[i].addEventListener('click', pictureFilterHandler);
+};
