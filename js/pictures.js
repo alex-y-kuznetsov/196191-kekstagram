@@ -94,12 +94,12 @@ var renderPictures = function () {
 };
 
 // Отрисовка поста Big Picture
-var renderBigPicture = function (number) {
+var renderBigPicture = function (evt) {
   removeHidden(bigPicture);
-  bigPicture.querySelector('.big-picture__img img').src = posts[number].url;
-  bigPicture.querySelector('.likes-count').textContent = posts[number].likes;
-  bigPicture.querySelector('.comments-count').textContent = posts[number].comments.length;
-  bigPicture.querySelector('.social__caption').textContent = posts[number].description;
+  bigPicture.querySelector('.big-picture__img img').src = evt.target.src;
+  bigPicture.querySelector('.likes-count').textContent = posts[0].likes;
+  bigPicture.querySelector('.comments-count').textContent = posts[0].comments.length;
+  bigPicture.querySelector('.social__caption').textContent = posts[0].description;
 
   // Удаляем старые комментарии
   var commentsToRemove = commentsContainer.querySelectorAll('.social__comment');
@@ -131,43 +131,53 @@ var renderBigPicture = function (number) {
 
 generateAllPosts();
 renderPictures();
-// removeHidden(bigPicture);
-// renderBigPicture();
 addVisuallyHidden(socialCommentCounter);
 addVisuallyHidden(socialLoadMore);
 
 // Показ большой фотографии по клику на превью
 var picturePreview = document.querySelectorAll('.picture__link');
+var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
 
 var openBigPictureHandler = function (evt) {
   evt.preventDefault();
-  renderBigPicture(evt.target[i]); // Вот тут я хочу обратииться к номеру фото, по которому кликнул, но не очень понимаю как
-  console.log(evt);
+  renderBigPicture(evt);
+  document.addEventListener('keydown', escBigPictureHandler);
+};
+
+var closeBigPictureHandler = function () {
+  addHidden(bigPicture);
+  bigPictureClose.removeEventListener('keydown', escPictureEditorHandler);
+  uploadPicture.innerHtml = '';
+};
+
+var escBigPictureHandler = function (evt) {
+  if (evt.keyCode === ESC_KEY) {
+    addHidden(bigPicture);
+  }
 };
 
 for (var i = 0; i < picturePreview.length; i++) {
   picturePreview[i].addEventListener('click', openBigPictureHandler);
-}
+};
+bigPictureClose.addEventListener('click', closeBigPictureHandler);
 
 // Загрузка изображения и показ формы редактирования
 var ESC_KEY = 27;
 var ENTER_KEY = 13;
 var uploadPicture = document.querySelector('#upload-file');
 var pictureEditor = document.querySelector('.img-upload__overlay');
-var pictureEditorClose = document.querySelectorAll('.cancel');
+var pictureEditorClose = document.querySelector('.img-upload__cancel');
 var sizeValue = pictureEditor.querySelector('.resize__control--value');
 
 var openPictureEditorHandler = function () {
   sizeValue.value = '100%';
   removeHidden(pictureEditor);
-  document.addEventListener('keydown', escPictureEditorHandler)
+  document.addEventListener('keydown', escPictureEditorHandler);
 };
 
 var closePictureEditorHandler = function () {
   addHidden(pictureEditor);
-  for (var i = 0; i < pictureEditorClose.length; i++) {
-    pictureEditorClose[i].removeEventListener('keydown', escPictureEditorHandler);
-  }
+  pictureEditorClose.removeEventListener('keydown', escPictureEditorHandler);
   uploadPicture.innerHtml = '';
 };
 
@@ -178,9 +188,7 @@ var escPictureEditorHandler = function (evt) {
 };
 
 uploadPicture.addEventListener('change', openPictureEditorHandler);
-for (var i = 0; i < pictureEditorClose.length; i++) {
-  pictureEditorClose[i].addEventListener('click', closePictureEditorHandler);
-}
+pictureEditorClose.addEventListener('click', closePictureEditorHandler);
 
 // Изменение размера изображения
 var scalePin = pictureEditor.querySelector('.scale__pin');
