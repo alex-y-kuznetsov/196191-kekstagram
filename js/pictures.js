@@ -158,12 +158,12 @@ var escBigPictureHandler = function (evt) {
 
 for (var i = 0; i < picturePreview.length; i++) {
   picturePreview[i].addEventListener('click', openBigPictureHandler);
-};
+}
 bigPictureClose.addEventListener('click', closeBigPictureHandler);
 
 // Загрузка изображения и показ формы редактирования
 var ESC_KEY = 27;
-var ENTER_KEY = 13;
+// var ENTER_KEY = 13;
 var uploadPicture = document.querySelector('#upload-file');
 var pictureEditor = document.querySelector('.img-upload__overlay');
 var pictureEditorClose = document.querySelector('.img-upload__cancel');
@@ -220,7 +220,7 @@ sizePlus.addEventListener('click', sizePlusHandler);
 var pictuteEffectModes = pictureEditor.querySelectorAll('.effects__radio');
 
 var pictureFilterHandler = function (evt) {
-  switch(evt.target.id) {
+  switch (evt.target.id) {
     case 'effect-chrome':
       previewImage.classList = '';
       previewImage.classList.add('effects__preview--chrome');
@@ -246,12 +246,12 @@ var pictureFilterHandler = function (evt) {
   }
 };
 
-for (var i = 0; i < pictuteEffectModes.length; i++) {
+for (i = 0; i < pictuteEffectModes.length; i++) {
   pictuteEffectModes[i].addEventListener('click', pictureFilterHandler);
-};
+}
 
 // Определение глубины эффекта
-var scalePin = pictureEditor.querySelector('.scale__pin');
+
 
 var filterDepthHandler = function (evt) { // ??
   var scalePinStartX = 456;
@@ -264,12 +264,13 @@ var filterDepthHandler = function (evt) { // ??
   } else {
     scalePinPath = 0;
   }
+  return scalePinPath;
 };
 
 scalePin.addEventListener('mouseup', filterDepthHandler);
 
 // Валидация
-var hashtagInput = pictureEditor.querySelector('.text__hashtags');
+// var hashtagInput = pictureEditor.querySelector('.text__hashtags');
 var commentInput = pictureEditor.querySelector('.text__description');
 
 commentInput.addEventListener('invalid', function () {
