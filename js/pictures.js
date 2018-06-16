@@ -287,7 +287,7 @@ commentInput.addEventListener('invalid', function () {
 
 // Проверка первого символа
 var isFirstSymbolValid = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
+  for (i = 0; i < arr.length; i++) {
     if (arr[i].charAt[0] !== '#') {
       return false;
     }
@@ -297,17 +297,17 @@ var isFirstSymbolValid = function (arr) {
 
 // Проверка минимальной длины хэштега
 var isMinLengthValid = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
+  for (i = 0; i < arr.length; i++) {
     if (arr[i].length < 1) {
       return false;
     }
   }
-  return true;hashtagsArr
+  return true;
 };
 
 // Проверка максимальной длины хэштега
 var isMaxLengthValid = function (arr) {
-  for (var i = 0; i < arr.length; i++) {
+  for (i = 0; i < arr.length; i++) {
     if (arr[i].length >= 20) {
       return false;
     }
@@ -326,7 +326,7 @@ var isMaxAmountValid = function (arr) {
 // Проверка уникальности хэштега
 var isHashUnique = function (arr) {
   var valuesSoFar = [];
-  for (var i = 0; i < arr.length; i++) {
+  for (i = 0; i < arr.length; i++) {
     var uniqueChecker = arr[i].toLowerCase();
     if (valuesSoFar.indexOf(uniqueChecker) !== -1) {
       return true;
@@ -334,7 +334,7 @@ var isHashUnique = function (arr) {
     valuesSoFar.push(uniqueChecker);
   }
   return false;
-}
+};
 
 var postSubmitHandler = function (evt) {
   var hashtagsArr = hashtagInput.value.split(' ');
@@ -366,6 +366,3 @@ var postSubmitHandler = function (evt) {
 };
 
 postForm.addEventListener('submit', postSubmitHandler);
-
-
-
