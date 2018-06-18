@@ -284,85 +284,44 @@ commentInput.addEventListener('invalid', function () {
 });
 
 // Валидация хэштегов
-
-// Проверка первого символа
-var isFirstSymbolValid = function (arr) {
-  for (i = 0; i < arr.length; i++) {
-    if (arr[i].charAt[0] !== '#') {
-      return false;
+var validateHashtags = function () {
+  var hashtagsArr = hashtagInput.value.split(' ');
+  for (i = 0; i < hashtagsArr.length; i++) {
+    if (hashtagsArr[i].charAt(0) !== '#' && hashtagsArr[i].length === 1) {
+      hashtagInput.setCustomValidity('Хэштег должен начинаться с символа #');
+    } else if (hashtagsArr[i].length === 1) {
+      hashtagInput.setCustomValidity('Хэштег не может быть пустым');
+    } else if (hashtagsArr[i].length > 20) {
+      hashtagInput.setCustomValidity('Длина хэштега не должна превышать 20 символов');
+    } else if (hashtagsArr.length > 5) {
+      hashtagInput.setCustomValidity('Нельзя использовать более 5 хэштегов');
+    } else {
+      hashtagInput.setCustomValidity('');
+    }
+    for (var j = 0; j < hashtagsArr.length - 1; j++) {
+      for (var k = j + 1; k < hashtagsArr.length; k++) {
+        if (hashtagsArr[j].toLowerCase() === hashtagsArr[k].toLowerCase()) {
+          hashtagInput.setCustomValidity('Нельзя использовать один хэштег несколько раз');
+        }
+      }
     }
   }
-  return true;
-};
-
-// Проверка минимальной длины хэштега
-var isMinLengthValid = function (arr) {
-  for (i = 0; i < arr.length; i++) {
-    if (arr[i].length < 1) {
-      return false;
-    }
+  if (!hashtagInput.validity.valid) {
+    hashtagInput.style.outline = '2px solid red';
   }
-  return true;
-};
-
-// Проверка максимальной длины хэштега
-var isMaxLengthValid = function (arr) {
-  for (i = 0; i < arr.length; i++) {
-    if (arr[i].length >= 20) {
-      return false;
-    }
-  }
-  return true;
-};
-
-// Проверка максимального количества хэштегов
-var isMaxAmountValid = function (arr) {
-  if (arr.length >= 4) {
-    return false;
-  }
-  return true;
-};
-
-// Проверка уникальности хэштега
-var isHashUnique = function (arr) {
-  var valuesSoFar = [];
-  for (i = 0; i < arr.length; i++) {
-    var uniqueChecker = arr[i].toLowerCase();
-    if (valuesSoFar.indexOf(uniqueChecker) !== -1) {
-      return true;
-    }
-    valuesSoFar.push(uniqueChecker);
-  }
-  return false;
 };
 
 var postSubmitHandler = function (evt) {
-  var hashtagsArr = hashtagInput.value.split(' ');
-  switch (false) {
-    case isFirstSymbolValid(hashtagsArr):
-      evt.preventDefault();
-      hashtagInput.setCustomValidity('Хэштег должен начинаться с символа #');
-      break;
-    case isMinLengthValid(hashtagsArr):
-      evt.preventDefault();
-      hashtagInput.setCustomValidity('Хэштег не может состоять из одного симовла');
-      break;
-    case isMaxLengthValid(hashtagsArr):
-      evt.preventDefault();
-      hashtagInput.setCustomValidity('Максимальная длина хэштега - 20 символов');
-      break;
-    case isMaxAmountValid(hashtagsArr):
-      evt.preventDefault();
-      hashtagInput.setCustomValidity('Максимальное количество хэштегов - 5');
-      break;
-    case isHashUnique(hashtagsArr):
-      evt.preventDefault();
-      hashtagInput.setCustomValidity('Хэштеги не должны повторяться');
-      break;
-    default:
-      hashtagInput.setCustomValidity('');
+  validateHashtags();
+  if (!postForm.checkValidity()) {
+    evt.preventDefault();
   }
-  // console.log(hashtagsArr);
+};
+var hashtagChangeHandler = function () {
+  hashtagInput.setCustomValidity('');
+  hashtagInput.style.outline = 'none';
 };
 
+hashtagInput.addEventListener('change', hashtagChangeHandler);
 postForm.addEventListener('submit', postSubmitHandler);
+postForm.addEventListener('submit', closePictureEditorHandler);
