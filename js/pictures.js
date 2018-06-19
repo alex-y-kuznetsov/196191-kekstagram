@@ -163,7 +163,6 @@ bigPictureClose.addEventListener('click', closeBigPictureHandler);
 
 // Загрузка изображения и показ формы редактирования
 var ESC_KEY = 27;
-// var ENTER_KEY = 13;
 var uploadPicture = document.querySelector('#upload-file');
 var pictureEditor = document.querySelector('.img-upload__overlay');
 var pictureEditorClose = document.querySelector('.img-upload__cancel');
@@ -217,41 +216,17 @@ sizeMinus.addEventListener('click', sizeMinusHandler);
 sizePlus.addEventListener('click', sizePlusHandler);
 
 // Наложение эффекта на изображение
-var pictuteEffectModes = pictureEditor.querySelectorAll('.effects__radio');
+var pictureEffectsContainer = pictureEditor.querySelector('.img-upload__effects');
 
 var pictureFilterHandler = function (evt) {
-  switch (evt.target.id) {
-    case 'effect-chrome':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--chrome');
-      break;
-    case 'effect-sepia':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--sepia');
-      break;
-    case 'effect-marvin':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--marvin');
-      break;
-    case 'effect-phobos':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--phobos');
-      break;
-    case 'effect-heat':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--heat');
-      break;
-    default:
-      previewImage.classList = '';
+  if (evt.target.value) {
+    previewImage.className = 'effects__preview--' + evt.target.value;
   }
 };
 
-for (i = 0; i < pictuteEffectModes.length; i++) {
-  pictuteEffectModes[i].addEventListener('click', pictureFilterHandler);
-}
+pictureEffectsContainer.addEventListener('click', pictureFilterHandler);
 
 // Определение глубины эффекта
-
 
 var filterDepthHandler = function (evt) { // ??
   var scalePinStartX = 456;
@@ -270,9 +245,11 @@ var filterDepthHandler = function (evt) { // ??
 scalePin.addEventListener('mouseup', filterDepthHandler);
 
 // Валидация
-// var hashtagInput = pictureEditor.querySelector('.text__hashtags');
+var hashtagInput = pictureEditor.querySelector('.text__hashtags');
 var commentInput = pictureEditor.querySelector('.text__description');
+var postForm = document.querySelector('.img-upload__form');
 
+// Валидация комментов
 commentInput.addEventListener('invalid', function () {
   if (commentInput.validity.tooLong) {
     commentInput.setCustomValidity('Максимальное число знаков 140');
@@ -281,3 +258,45 @@ commentInput.addEventListener('invalid', function () {
   }
 });
 
+// Валидация хэштегов
+var validateHashtags = function () {
+  var hashtagsArr = hashtagInput.value.split(' ');
+  for (i = 0; i < hashtagsArr.length; i++) {
+    if (hashtagsArr[i].charAt(0) !== '#') {
+      hashtagInput.setCustomValidity('Хэштег должен начинаться с символа #');
+    } else if (hashtagsArr[i].length === 1) {
+      hashtagInput.setCustomValidity('Хэштег не может быть пустым');
+    } else if (hashtagsArr[i].length > 20) {
+      hashtagInput.setCustomValidity('Длина хэштега не должна превышать 20 символов');
+    } else if (hashtagsArr.length > 5) {
+      hashtagInput.setCustomValidity('Нельзя использовать более 5 хэштегов');
+    } else {
+      hashtagInput.setCustomValidity('');
+    }
+    for (var j = 0; j < hashtagsArr.length - 1; j++) {
+      for (var k = j + 1; k < hashtagsArr.length; k++) {
+        if (hashtagsArr[j].toLowerCase() === hashtagsArr[k].toLowerCase()) {
+          hashtagInput.setCustomValidity('Нельзя использовать один хэштег несколько раз');
+        }
+      }
+    }
+  }
+  if (!hashtagInput.validity.valid) {
+    hashtagInput.style.outline = '2px solid red';
+  }
+};
+
+var postSubmitHandler = function (evt) {
+  validateHashtags();
+  if (!postForm.checkValidity()) {
+    evt.preventDefault();
+    postForm.reportValidity();
+  }
+};
+var hashtagChangeHandler = function () {
+  hashtagInput.setCustomValidity('');
+  hashtagInput.style.outline = 'none';
+};
+
+hashtagInput.addEventListener('change', hashtagChangeHandler);
+postForm.addEventListener('submit', postSubmitHandler);
