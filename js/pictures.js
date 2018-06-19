@@ -220,30 +220,7 @@ sizePlus.addEventListener('click', sizePlusHandler);
 var pictuteEffectModes = pictureEditor.querySelectorAll('.effects__radio');
 
 var pictureFilterHandler = function (evt) {
-  switch (evt.target.id) {
-    case 'effect-chrome':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--chrome');
-      break;
-    case 'effect-sepia':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--sepia');
-      break;
-    case 'effect-marvin':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--marvin');
-      break;
-    case 'effect-phobos':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--phobos');
-      break;
-    case 'effect-heat':
-      previewImage.classList = '';
-      previewImage.classList.add('effects__preview--heat');
-      break;
-    default:
-      previewImage.classList = '';
-  }
+  previewImage.className = 'effects__preview--' + evt.target.value;
 };
 
 for (i = 0; i < pictuteEffectModes.length; i++) {
@@ -251,7 +228,6 @@ for (i = 0; i < pictuteEffectModes.length; i++) {
 }
 
 // Определение глубины эффекта
-
 
 var filterDepthHandler = function (evt) { // ??
   var scalePinStartX = 456;
@@ -287,7 +263,7 @@ commentInput.addEventListener('invalid', function () {
 var validateHashtags = function () {
   var hashtagsArr = hashtagInput.value.split(' ');
   for (i = 0; i < hashtagsArr.length; i++) {
-    if (hashtagsArr[i].charAt(0) !== '#' && hashtagsArr[i].length === 1) {
+    if (hashtagsArr[i].charAt(0) !== '#') {
       hashtagInput.setCustomValidity('Хэштег должен начинаться с символа #');
     } else if (hashtagsArr[i].length === 1) {
       hashtagInput.setCustomValidity('Хэштег не может быть пустым');
@@ -315,6 +291,7 @@ var postSubmitHandler = function (evt) {
   validateHashtags();
   if (!postForm.checkValidity()) {
     evt.preventDefault();
+    postForm.reportValidity();
   }
 };
 var hashtagChangeHandler = function () {
@@ -324,4 +301,3 @@ var hashtagChangeHandler = function () {
 
 hashtagInput.addEventListener('change', hashtagChangeHandler);
 postForm.addEventListener('submit', postSubmitHandler);
-postForm.addEventListener('submit', closePictureEditorHandler);
