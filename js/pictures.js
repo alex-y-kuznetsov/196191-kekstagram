@@ -163,7 +163,6 @@ bigPictureClose.addEventListener('click', closeBigPictureHandler);
 
 // Загрузка изображения и показ формы редактирования
 var ESC_KEY = 27;
-// var ENTER_KEY = 13;
 var uploadPicture = document.querySelector('#upload-file');
 var pictureEditor = document.querySelector('.img-upload__overlay');
 var pictureEditorClose = document.querySelector('.img-upload__cancel');
@@ -217,15 +216,15 @@ sizeMinus.addEventListener('click', sizeMinusHandler);
 sizePlus.addEventListener('click', sizePlusHandler);
 
 // Наложение эффекта на изображение
-var pictuteEffectModes = pictureEditor.querySelectorAll('.effects__radio');
+var pictureEffectsContainer = pictureEditor.querySelector('.img-upload__effects');
 
 var pictureFilterHandler = function (evt) {
-  previewImage.className = 'effects__preview--' + evt.target.value;
+  if (evt.target.value) {
+    previewImage.className = 'effects__preview--' + evt.target.value;
+  }
 };
 
-for (i = 0; i < pictuteEffectModes.length; i++) {
-  pictuteEffectModes[i].addEventListener('click', pictureFilterHandler);
-}
+pictureEffectsContainer.addEventListener('click', pictureFilterHandler);
 
 // Определение глубины эффекта
 
