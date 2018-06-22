@@ -171,6 +171,7 @@ var sizeValue = pictureEditor.querySelector('.resize__control--value');
 var openPictureEditorHandler = function () {
   sizeValue.value = '100%';
   removeHidden(pictureEditor);
+  resetScale();
   document.addEventListener('keydown', escPictureEditorHandler);
 };
 
@@ -190,7 +191,6 @@ uploadPicture.addEventListener('change', openPictureEditorHandler);
 pictureEditorClose.addEventListener('click', closePictureEditorHandler);
 
 // Изменение размера изображения
-var scalePin = pictureEditor.querySelector('.scale__pin');
 var sizeMinus = pictureEditor.querySelector('.resize__control--minus');
 var sizePlus = pictureEditor.querySelector('.resize__control--plus');
 var uploadPreview = pictureEditor.querySelector('.img-upload__preview');
@@ -220,6 +220,7 @@ var pictureEffectsContainer = pictureEditor.querySelector('.img-upload__effects'
 
 var pictureFilterHandler = function (evt) {
   if (evt.target.value) {
+    resetScale();
     previewImage.className = 'effects__preview--' + evt.target.value;
   }
 };
@@ -227,22 +228,75 @@ var pictureFilterHandler = function (evt) {
 pictureEffectsContainer.addEventListener('click', pictureFilterHandler);
 
 // Определение глубины эффекта
+var SCALE_WIDTH = 453;
+var effectsScale = pictureEditor.querySelector('.img-upload__scale');
+var scalePin = pictureEditor.querySelector('.scale__pin');
+var scaleLine = pictureEditor.querySelector('.scale__line');
+var scaleLevel = pictureEditor.querySelector('.scale__level');
+var scaleValue = pictureEditor.querySelector('.scale__value');
 
-var filterDepthHandler = function (evt) { // ??
-  var scalePinStartX = 456;
-  var scalePinEndX = evt.x;
-  var scalePinPath;
-  if (scalePinEndX > scalePinStartX) {
-    scalePinPath = scalePinEndX + scalePinStartX;
-  } else if (scalePinEndX < scalePinStartX) {
-    scalePinPath = scalePinEndX - scalePinStartX;
+var resetScale = function () {
+  if (previewImage.className === 'effects__preview--none' || !previewImage.className) {
+    effectsScale.classList.add('hidden');
   } else {
-    scalePinPath = 0;
+    effectsScale.classList.remove('hidden');
   }
-  return scalePinPath;
+  scalePin.style.left = SCALE_WIDTH + 'px';
+  scaleLevel.style.width = SCALE_WIDTH + 'px';
 };
 
-scalePin.addEventListener('mouseup', filterDepthHandler);
+// Определение глубины эффекта
+var getScaleProportions = function () {
+  var scaleProportions = {
+    none: '',
+    'effects__preview--chrome': 'grayscale(' + 1 / 100 * scaleValue.value + ')',
+    'effects__preview--sepia': 'sepia(' + 1 / 100 * scaleValue.value + ')',
+    'effects__preview--marvin': 'invert(' + scaleValue.value + ')',
+    'effects__preview--phobos': 'blur(' + 3 / 100 * scaleValue.value + 'px)',
+    'effects__preview--heat': 'brightness(' + ((2 / 100 * scaleValue.value) + 1) +')'
+  }
+  return scaleProportions;
+};
+
+var applyFilterDepth = function () {
+  var currentFilter = previewImage.className;
+  getScaleProportions();
+  previewImage.style.filter = scaleProportions.currentFilter;
+};
+
+// Перемещение пина
+var pinMouseDownHandler = function (evt) {
+  evt.preventDefault();
+  var startX = evt.clientX;
+
+  var pinMouseMoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+    var shift = startX - moveEvt.clientX;
+    var scaleLineLeftOffset = scaleLine.getBoundingClientRect().left;
+    var scalePinLeft = startX - shift - scaleLineLeftOffset;
+
+    if (scalePinLeft < 0 || scalePinLeft > SCALE_WIDTH) {
+      return;
+    }
+      scalePin.style.left = scalePinLeft + 'px';
+      scaleLevel.style.width = scalePinLeft + 'px';
+
+      // Apply effect here
+      scaleValue.value = parseFloat(scalePin.style.left);
+      applyFilterDepth();
+  };
+
+  var pinMouseUpHandler = function (upEvt) {
+    upEvt.preventDefault();
+    document.removeEventListener('mousemove', pinMouseMoveHandler);
+    document.removeEventListener('mouseup', pinMouseUpHandler);
+  };
+
+  document.addEventListener('mousemove', pinMouseMoveHandler);
+  document.addEventListener('mouseup', pinMouseUpHandler);
+};
+
+scalePin.addEventListener('mousedown', pinMouseDownHandler);
 
 // Валидация
 var hashtagInput = pictureEditor.querySelector('.text__hashtags');
