@@ -241,27 +241,29 @@ var resetScale = function () {
   } else {
     effectsScale.classList.remove('hidden');
   }
+  previewImage.className = '';
+  applyFilterDepth();
   scalePin.style.left = SCALE_WIDTH + 'px';
   scaleLevel.style.width = SCALE_WIDTH + 'px';
 };
 
 // Определение глубины эффекта
-var getScaleProportions = function () {
+var getScaleProportions = function (input) {
   var scaleProportions = {
-    none: '',
-    'effects__preview--chrome': 'grayscale(' + 1 / 100 * scaleValue.value + ')',
-    'effects__preview--sepia': 'sepia(' + 1 / 100 * scaleValue.value + ')',
-    'effects__preview--marvin': 'invert(' + scaleValue.value + ')',
-    'effects__preview--phobos': 'blur(' + 3 / 100 * scaleValue.value + 'px)',
-    'effects__preview--heat': 'brightness(' + ((2 / 100 * scaleValue.value) + 1) +')'
+    'effects__preview--none': 'none',
+    'effects__preview--chrome': 'grayscale(' + 1 / SCALE_WIDTH * input.value + ')',
+    'effects__preview--sepia': 'sepia(' + 1 / SCALE_WIDTH * input.value + ')',
+    'effects__preview--marvin': 'invert(' + 100 * input.value / SCALE_WIDTH + '%)',
+    'effects__preview--phobos': 'blur(' + 3 / SCALE_WIDTH * input.value + 'px)',
+    'effects__preview--heat': 'brightness(' + ((2 / SCALE_WIDTH * input.value) + 1) +')'
   }
   return scaleProportions;
 };
 
 var applyFilterDepth = function () {
   var currentFilter = previewImage.className;
-  getScaleProportions();
-  previewImage.style.filter = scaleProportions.currentFilter;
+  var result = getScaleProportions(scaleValue);
+  previewImage.style.filter = result[currentFilter];
 };
 
 // Перемещение пина
