@@ -169,6 +169,7 @@ var pictureEditorClose = document.querySelector('.img-upload__cancel');
 var sizeValue = pictureEditor.querySelector('.resize__control--value');
 
 var openPictureEditorHandler = function () {
+  addHidden(effectsScale);
   sizeValue.value = '100%';
   removeHidden(pictureEditor);
   resetScale();
@@ -220,7 +221,13 @@ var pictureEffectsContainer = pictureEditor.querySelector('.img-upload__effects'
 
 var pictureFilterHandler = function (evt) {
   if (evt.target.value) {
+    if (evt.target.value === 'none') {
+      effectsScale.classList.add('hidden');
+    } else {
+      effectsScale.classList.remove('hidden');
+    }
     resetScale();
+    previewImage.style.filter = '';
     previewImage.className = 'effects__preview--' + evt.target.value;
   }
 };
@@ -236,13 +243,7 @@ var scaleLevel = pictureEditor.querySelector('.scale__level');
 var scaleValue = pictureEditor.querySelector('.scale__value');
 
 var resetScale = function () {
-  if (previewImage.className === 'effects__preview--none' || !previewImage.className) {
-    effectsScale.classList.add('hidden');
-  } else {
-    effectsScale.classList.remove('hidden');
-  }
   previewImage.className = '';
-  applyFilterDepth();
   scalePin.style.left = SCALE_WIDTH + 'px';
   scaleLevel.style.width = SCALE_WIDTH + 'px';
 };
@@ -250,13 +251,13 @@ var resetScale = function () {
 // Определение глубины эффекта
 var getScaleProportions = function (input) {
   var scaleProportions = {
-    'effects__preview--none': 'none',
+    'effects__preview--none': '',
     'effects__preview--chrome': 'grayscale(' + 1 / SCALE_WIDTH * input.value + ')',
     'effects__preview--sepia': 'sepia(' + 1 / SCALE_WIDTH * input.value + ')',
     'effects__preview--marvin': 'invert(' + 100 * input.value / SCALE_WIDTH + '%)',
     'effects__preview--phobos': 'blur(' + 3 / SCALE_WIDTH * input.value + 'px)',
-    'effects__preview--heat': 'brightness(' + ((2 / SCALE_WIDTH * input.value) + 1) +')'
-  }
+    'effects__preview--heat': 'brightness(' + ((2 / SCALE_WIDTH * input.value) + 1) + ')'
+  };
   return scaleProportions;
 };
 
@@ -280,12 +281,12 @@ var pinMouseDownHandler = function (evt) {
     if (scalePinLeft < 0 || scalePinLeft > SCALE_WIDTH) {
       return;
     }
-      scalePin.style.left = scalePinLeft + 'px';
-      scaleLevel.style.width = scalePinLeft + 'px';
+    scalePin.style.left = scalePinLeft + 'px';
+    scaleLevel.style.width = scalePinLeft + 'px';
 
-      // Apply effect here
-      scaleValue.value = parseFloat(scalePin.style.left);
-      applyFilterDepth();
+    // Apply effect here
+    scaleValue.value = parseFloat(scalePin.style.left);
+    applyFilterDepth();
   };
 
   var pinMouseUpHandler = function (upEvt) {
