@@ -41,6 +41,7 @@
       var postElement = postTemplate.cloneNode(true);
 
       postElement.querySelector('.picture__img').src = posts[i].url;
+      postElement.querySelector('.picture__img').dataset.indexNumber = i;
       postElement.querySelector('.picture__stat--likes').textContent = posts[i].likes;
       postElement.querySelector('.picture__stat--comments').textContent = posts[i].comments.length;
 
@@ -53,9 +54,9 @@
   var renderBigPicture = function (evt) {
     window.utils.removeHidden(bigPicture);
     bigPicture.querySelector('.big-picture__img img').src = evt.target.src;
-    bigPicture.querySelector('.likes-count').textContent = posts[0].likes;
-    bigPicture.querySelector('.comments-count').textContent = posts[0].comments.length;
-    bigPicture.querySelector('.social__caption').textContent = posts[0].description;
+    bigPicture.querySelector('.likes-count').textContent = posts[evt.target.dataset.indexNumber].likes;
+    bigPicture.querySelector('.comments-count').textContent = posts[evt.target.dataset.indexNumber].comments.length;
+    bigPicture.querySelector('.social__caption').textContent = posts[evt.target.dataset.indexNumber].description;
 
     // Удаляем старые комментарии
     var commentsToRemove = commentsContainer.querySelectorAll('.social__comment');
@@ -80,7 +81,7 @@
 
       var newCommentText = document.createElement('p');
       newCommentText.classList.add('social__text');
-      newCommentText.textContent = postComment[i];
+      newCommentText.textContent = postComment[evt.target.dataset.indexNumber];
       newComment.appendChild(newCommentText);
     }
   };
