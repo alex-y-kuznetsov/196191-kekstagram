@@ -24,21 +24,21 @@
   };
   // Создание массива постов
   var posts = [];
-  var generateAllPosts = function () {
-    for (var i = 0; i < MAX_POSTS; i++) {
+  window.backend.download(function (response) { // Я так понимаю, что должно получиться что-то вроде такого,
+    for (var i = 0; i < MAX_POSTS; i++) {       // Но так не работает совсем
       posts[i] = {
-        url: 'photos/' + (i + 1) + '.jpg',
-        likes: window.utils.getRandomNumber(MIN_LIKES, MAX_LIKES),
-        comments: generateComment(),
+        url: response.url,                      // Как получить доступ к отдельным частям объектов с сервера не совсем понятно
+        likes: response.likes,
+        comments: response.comments,
         description: window.utils.getRandomFromArr(window.data.descriptions)
       };
     }
-  };
+  });
   // Отрисовка постов
-  var renderPictures = function () {
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < MAX_POSTS; i++) {
-      var postElement = postTemplate.cloneNode(true);
+  var renderPictures = function () {                  // Если эту функцию передать как параметр window.backend.download
+    var fragment = document.createDocumentFragment(); // То миниатюры отрисуются как надо (так было в демке)
+    for (var i = 0; i < MAX_POSTS; i++) {             // Но сделать по аналогии функцию отрисовки bigPicture не получается
+      var postElement = postTemplate.cloneNode(true); // Консоль ругается на evt.target'ы
 
       postElement.querySelector('.picture__img').src = posts[i].url;
       postElement.querySelector('.picture__img').dataset.indexNumber = i;
@@ -92,7 +92,7 @@
     }
   };
 
-  generateAllPosts();
+  // generateAllPosts();
   renderPictures();
   window.utils.addVisuallyHidden(socialCommentCounter);
   window.utils.addVisuallyHidden(socialLoadMore);

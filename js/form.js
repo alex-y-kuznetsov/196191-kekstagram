@@ -188,6 +188,10 @@
       evt.preventDefault();
       postForm.reportValidity();
     }
+    window.backend.upload(new FormData(postForm), function (response) {
+      window.utils.addHidden(pictureEditor);
+    });
+    evt.preventDefault();
   };
   var hashtagChangeHandler = function () {
     hashtagInput.setCustomValidity('');
