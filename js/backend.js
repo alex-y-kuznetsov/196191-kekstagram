@@ -31,12 +31,15 @@
       xhr.responseType = 'json';
 
       xhr.addEventListener('load', function () {
-        if (xhr.status === 200) {
-          onLoad(xhr.response);
-        } else if (xhr.status === 400) {
-          onError('Пожалуйста, загрузите изображение');
-        } else {
-          onError('Статус:' + xhr.status + ' ' + xhr.statusText);
+        switch (xhr.status) {
+          case 200:
+            onLoad(xhr.response);
+            break;
+          case 400:
+            onError('Пожалуйста, убедитесь, что загружаете изображение');
+            break;
+          default:
+            onError('Статус:' + xhr.status + ' ' + xhr.statusText);
         }
       });
       xhr.addEventListener('error', function () {
@@ -46,6 +49,7 @@
         onError('Запрос не успел выполниться за ' + (xhr.timeout / 1000) + 'секунд');
       });
 
+      xhr.timeout = 5000;
       xhr.open('POST', UPLOAD_URL);
       xhr.send(data);
     }

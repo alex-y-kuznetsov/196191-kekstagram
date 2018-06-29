@@ -36,7 +36,7 @@
 
   // Создание массива постов
   var posts = [];
-  window.backend.download(function (response) {
+  var successHandler = function (response) {
     posts = response;
 
     var fragment = document.createDocumentFragment();
@@ -56,7 +56,7 @@
     for (var j = 0; j < picturePreview.length; j++) {
       picturePreview[j].addEventListener('click', openBigPictureHandler);
     }
-  });
+  };
 
   // Отрисовка Big Picture
   var renderBigPicture = function (evt) {
@@ -104,15 +104,8 @@
 
   bigPictureClose.addEventListener('click', closeBigPictureHandler);
 
-  var errorHandler = function () {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+  var errorHandler = function (errorMessage) {
+    window.utils.createErrorMessage(errorMessage);
   };
-  window.backend.download(errorHandler);
+  window.backend.download(successHandler, errorHandler);
 })();
