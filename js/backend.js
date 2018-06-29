@@ -17,7 +17,7 @@
         }
       });
       xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения')
+        onError('Произошла ошибка соединения');
       });
       xhr.addEventListener('timeout', function () {
         onError('Запрос не успел выполниться за ' + (xhr.timeout / 1000) + 'секунд');
@@ -43,7 +43,7 @@
         }
       });
       xhr.addEventListener('error', function () {
-        onError('Произошла ошибка соединения')
+        onError('Произошла ошибка соединения');
       });
       xhr.addEventListener('timeout', function () {
         onError('Запрос не успел выполниться за ' + (xhr.timeout / 1000) + 'секунд');
@@ -53,5 +53,5 @@
       xhr.open('POST', UPLOAD_URL);
       xhr.send(data);
     }
-  }
+  };
 })();

@@ -182,7 +182,7 @@
     }
   };
 
-  var successHandler = function (response) {
+  var successHandler = function () {
     window.utils.addHidden(pictureEditor);
     window.uploadPicture.innerHtml = '';
   };
