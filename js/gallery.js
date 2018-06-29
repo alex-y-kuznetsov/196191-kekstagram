@@ -13,32 +13,35 @@
   var commentsContainer = document.querySelector('.social__comments');
   var socialCommentCounter = document.querySelector('.social__comment-count');
   var socialLoadMore = document.querySelector('.social__loadmore');
-  // Создание поста
-  var generateComment = function () {
-    var postComment = [];
-    var randomTimes = window.utils.getRandomNumber(MIN_COMMENTS, MAX_COMMENTS);
-    for (var i = 0; i < randomTimes; i++) {
-      postComment.push(window.data.sentences[window.utils.getRandomNumber(0, window.data.sentences.length - 1)]);
-    }
-    return postComment;
+  var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
+
+  // Создание обработчиков
+  var openBigPictureHandler = function (evt) {
+    evt.preventDefault();
+    renderBigPicture(evt);
+    document.addEventListener('keydown', escBigPictureHandler);
   };
+
+  var closeBigPictureHandler = function () {
+    window.utils.addHidden(bigPicture);
+    bigPictureClose.removeEventListener('keydown', escBigPictureHandler);
+    window.uploadPicture.innerHtml = '';
+  };
+
+  var escBigPictureHandler = function (evt) {
+    if (evt.keyCode === ESC_KEY) {
+      window.utils.addHidden(bigPicture);
+    }
+  };
+
   // Создание массива постов
   var posts = [];
-  window.backend.download(function (response) { // Я так понимаю, что должно получиться что-то вроде такого,
-    for (var i = 0; i < MAX_POSTS; i++) {       // Но так не работает совсем
-      posts[i] = {
-        url: response.url,                      // Как получить доступ к отдельным частям объектов с сервера не совсем понятно
-        likes: response.likes,
-        comments: response.comments,
-        description: window.utils.getRandomFromArr(window.data.descriptions)
-      };
-    }
-  });
-  // Отрисовка постов
-  var renderPictures = function () {                  // Если эту функцию передать как параметр window.backend.download
-    var fragment = document.createDocumentFragment(); // То миниатюры отрисуются как надо (так было в демке)
-    for (var i = 0; i < MAX_POSTS; i++) {             // Но сделать по аналогии функцию отрисовки bigPicture не получается
-      var postElement = postTemplate.cloneNode(true); // Консоль ругается на evt.target'ы
+  window.backend.download(function (response) {
+    posts = response;
+
+    var fragment = document.createDocumentFragment();
+    for (var i = 0; i < MAX_POSTS; i++) {
+      var postElement = postTemplate.cloneNode(true);
 
       postElement.querySelector('.picture__img').src = posts[i].url;
       postElement.querySelector('.picture__img').dataset.indexNumber = i;
@@ -49,15 +52,20 @@
     }
 
     similarListElement.appendChild(fragment);
-  };
-  // Отрисовка поста Big Picture
+    var picturePreview = document.querySelectorAll('.picture__link');
+    for (var j = 0; j < picturePreview.length; j++) {
+      picturePreview[j].addEventListener('click', openBigPictureHandler);
+    }
+  });
+
+  // Отрисовка Big Picture
   var renderBigPicture = function (evt) {
     window.utils.removeHidden(bigPicture);
     var pictureIndex = evt.target.dataset.indexNumber;
     bigPicture.querySelector('.big-picture__img img').src = evt.target.src;
     bigPicture.querySelector('.likes-count').textContent = posts[pictureIndex].likes;
     bigPicture.querySelector('.comments-count').textContent = posts[pictureIndex].comments.length;
-    bigPicture.querySelector('.social__caption').textContent = posts[pictureIndex].description;
+    bigPicture.querySelector('.social__caption').textContent = posts[pictureIndex].comments[0];
 
     // Удаляем старые комментарии
     var commentsToRemove = commentsContainer.querySelectorAll('.social__comment');
@@ -91,35 +99,20 @@
       newComment.appendChild(newCommentText);
     }
   };
-
-  // generateAllPosts();
-  renderPictures();
   window.utils.addVisuallyHidden(socialCommentCounter);
   window.utils.addVisuallyHidden(socialLoadMore);
-  // Показ большой фотографии по клику на превью
-  var picturePreview = document.querySelectorAll('.picture__link');
-  var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
 
-  var openBigPictureHandler = function (evt) {
-    evt.preventDefault();
-    renderBigPicture(evt);
-    document.addEventListener('keydown', escBigPictureHandler);
-  };
-
-  var closeBigPictureHandler = function () {
-    window.utils.addHidden(bigPicture);
-    bigPictureClose.removeEventListener('keydown', escBigPictureHandler);
-    window.uploadPicture.innerHtml = '';
-  };
-
-  var escBigPictureHandler = function (evt) {
-    if (evt.keyCode === ESC_KEY) {
-      window.utils.addHidden(bigPicture);
-    }
-  };
-
-  for (var i = 0; i < picturePreview.length; i++) {
-    picturePreview[i].addEventListener('click', openBigPictureHandler);
-  }
   bigPictureClose.addEventListener('click', closeBigPictureHandler);
+
+  var errorHandler = function () {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+  window.backend.download(errorHandler);
 })();
