@@ -182,12 +182,21 @@
     }
   };
 
+  var successHandler = function () {
+    window.utils.addHidden(pictureEditor);
+    window.uploadPicture.innerHtml = '';
+  };
+  var errorHandler = function (errorMessage) {
+    window.utils.createErrorMessage(errorMessage);
+  };
+
   var postSubmitHandler = function (evt) {
+    evt.preventDefault();
     validateHashtags();
     if (!postForm.checkValidity()) {
-      evt.preventDefault();
       postForm.reportValidity();
     }
+    window.backend.upload(new FormData(postForm), successHandler, errorHandler);
   };
   var hashtagChangeHandler = function () {
     hashtagInput.setCustomValidity('');
