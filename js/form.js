@@ -191,9 +191,9 @@
   };
 
   var postSubmitHandler = function (evt) {
+    evt.preventDefault();
     validateHashtags();
     if (!postForm.checkValidity()) {
-      evt.preventDefault();
       postForm.reportValidity();
     }
     window.backend.upload(new FormData(postForm), successHandler, errorHandler);

@@ -1,10 +1,6 @@
 'use strict';
 
 (function () {
-  // var MIN_COMMENTS = 1;
-  // var MAX_COMMENTS = 15;
-  // var MIN_LIKES = 15;
-  // var MAX_LIKES = 200;
   var MAX_POSTS = 25;
   var ESC_KEY = 27;
   var postTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
