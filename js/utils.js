@@ -26,6 +26,22 @@
       node.style.fontSize = '30px';
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
+    },
+    getNewPosts: function (data, quantity) {
+      var temporary = data.slice();
+      temporary.forEach(function (element, i, arr) {
+        var j = window.utils.getRandomNumber(0, i);
+        arr[i] = arr[j];
+        arr[j] = element;
+      });
+      return temporary;
+    },
+    getDiscussedPosts: function (data) {
+      var temporary = data.slice();
+      temporary.sort(function (left, right) {
+        return right.comments.length - left.comments.length;
+      })
+      return temporary;
     }
   };
 })();

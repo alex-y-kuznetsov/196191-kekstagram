@@ -10,6 +10,8 @@
   var socialCommentCounter = document.querySelector('.social__comment-count');
   var socialLoadMore = document.querySelector('.social__loadmore');
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
+  var sortByBlock = document.querySelector('.img-filters');
+  var picturePreview = document.querySelectorAll('.picture__link');
 
   // Создание обработчиков
   var openBigPictureHandler = function (evt) {
@@ -30,29 +32,62 @@
     }
   };
 
-  // Создание массива постов
-  var posts = [];
-  var successHandler = function (response) {
-    posts = response;
+  // Очитска галереи
+  var clearGallery = function () {
+    // picturePreview.forEach(function (picture) {
+    //   similarListElement.removeChild(picture);
+    // })
+    similarListElement.innerHtml = '';
+  };
 
+  var renderPosts = function (data) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < MAX_POSTS; i++) {
       var postElement = postTemplate.cloneNode(true);
 
-      postElement.querySelector('.picture__img').src = posts[i].url;
+      postElement.querySelector('.picture__img').src = data[i].url;
       postElement.querySelector('.picture__img').dataset.indexNumber = i;
-      postElement.querySelector('.picture__stat--likes').textContent = posts[i].likes;
-      postElement.querySelector('.picture__stat--comments').textContent = posts[i].comments.length;
+      postElement.querySelector('.picture__stat--likes').textContent = data[i].likes;
+      postElement.querySelector('.picture__stat--comments').textContent = data[i].comments.length;
 
       fragment.appendChild(postElement);
     }
 
     similarListElement.appendChild(fragment);
-    var picturePreview = document.querySelectorAll('.picture__link');
     for (var j = 0; j < picturePreview.length; j++) {
       picturePreview[j].addEventListener('click', openBigPictureHandler);
     }
   };
+
+  // Создание массива постов
+  var posts = [];
+  var successHandler = function (response) {
+    posts = response;
+    renderPosts(posts);
+    sortByBlock.classList.remove('img-filters--inactive');
+  };
+
+  // Фильтрация постов
+  var sortByModes = sortByBlock.querySelectorAll('.img-filters__button');
+  var updatePosts = function (sortByMode) {
+    switch (sortByMode.id) {                                                      // Кажется, проблема возникает здесь
+      case 'filter-popular': renderPosts(posts);
+        break;
+      case 'filter-new': renderPosts(window.utils.getNewPosts(posts, 10));
+        break;
+      case 'filter-discussed': renderPosts(window.utils.getDiscussedPosts(posts));
+        break;
+    }
+  };
+
+  var changeSortModeHandler = function (evt) {
+    clearGallery();
+    updatePosts(evt.target);                                                      // Или здесь
+  };
+
+  for (var k = 0; k < sortByModes.length; k++) {
+    sortByModes[k].addEventListener('click', changeSortModeHandler);
+  }
 
   // Отрисовка Big Picture
   var renderBigPicture = function (evt) {
