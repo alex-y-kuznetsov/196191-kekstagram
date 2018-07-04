@@ -34,8 +34,8 @@
         arr[i] = arr[j];
         arr[j] = element;
       });
-      return temporary;
-    },
+      return temporary.slice(0, quantity); // Ошибка возникает тут, без слайса до quantity все работает
+    },                                     // Но само-собой не обрезается и выдаются все посты вместо 10
     getDiscussedPosts: function (data) {
       var temporary = data.slice();
       temporary.sort(function (left, right) {

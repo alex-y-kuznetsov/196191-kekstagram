@@ -34,10 +34,10 @@
 
   // Очитска галереи
   var clearGallery = function () {
-    // picturePreview.forEach(function (picture) {
-    //   similarListElement.removeChild(picture);
-    // })
-    similarListElement.innerHtml = '';
+    var picturesToRemove = document.querySelectorAll('.picture__link');
+    picturesToRemove.forEach(function (picture) {
+      similarListElement.removeChild(picture);
+    })
   };
 
   var renderPosts = function (data) {
@@ -68,12 +68,13 @@
   };
 
   // Фильтрация постов
+  var NEW_POSTS_QUANTITY = 10;
   var sortByModes = sortByBlock.querySelectorAll('.img-filters__button');
   var updatePosts = function (sortByMode) {
-    switch (sortByMode.id) {                                                      // Кажется, проблема возникает здесь
+    switch (sortByMode.id) {
       case 'filter-popular': renderPosts(posts);
         break;
-      case 'filter-new': renderPosts(window.utils.getNewPosts(posts, 10));
+      case 'filter-new': renderPosts(window.utils.getNewPosts(posts, NEW_POSTS_QUANTITY));
         break;
       case 'filter-discussed': renderPosts(window.utils.getDiscussedPosts(posts));
         break;
@@ -82,7 +83,7 @@
 
   var changeSortModeHandler = function (evt) {
     clearGallery();
-    updatePosts(evt.target);                                                      // Или здесь
+    updatePosts(evt.target);
   };
 
   for (var k = 0; k < sortByModes.length; k++) {
