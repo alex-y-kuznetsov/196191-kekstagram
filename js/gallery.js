@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var MAX_POSTS = 25;
+  // var MAX_POSTS = 25;
   var ESC_KEY = 27;
   var postTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var similarListElement = document.querySelector('.pictures');
@@ -11,7 +11,7 @@
   var socialLoadMore = document.querySelector('.social__loadmore');
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
   var sortByBlock = document.querySelector('.img-filters');
-  var picturePreview = document.querySelectorAll('.picture__link');
+  // var picturePreview = document.querySelectorAll('.picture__link');
 
   // Создание обработчиков
   var openBigPictureHandler = function (evt) {
@@ -37,12 +37,12 @@
     var picturesToRemove = document.querySelectorAll('.picture__link');
     picturesToRemove.forEach(function (picture) {
       similarListElement.removeChild(picture);
-    })
+    });
   };
 
   var renderPosts = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < MAX_POSTS; i++) {
+    for (var i = 0; i < data.length; i++) {
       var postElement = postTemplate.cloneNode(true);
 
       postElement.querySelector('.picture__img').src = data[i].url;
@@ -52,8 +52,9 @@
 
       fragment.appendChild(postElement);
     }
-
     similarListElement.appendChild(fragment);
+
+    var picturePreview = document.querySelectorAll('.picture__link');
     for (var j = 0; j < picturePreview.length; j++) {
       picturePreview[j].addEventListener('click', openBigPictureHandler);
     }
@@ -81,10 +82,15 @@
     }
   };
 
-  var changeSortModeHandler = function (evt) {
+  var changeSortModeHandler = window.utils.debounce(function (evt) {
     clearGallery();
     updatePosts(evt.target);
-  };
+
+    for (var k = 0; k < sortByModes.length; k++) {
+      sortByModes[k].classList.remove('img-filters__button--active');
+    }
+    evt.target.classList.toggle('img-filters__button--active');
+  });
 
   for (var k = 0; k < sortByModes.length; k++) {
     sortByModes[k].addEventListener('click', changeSortModeHandler);

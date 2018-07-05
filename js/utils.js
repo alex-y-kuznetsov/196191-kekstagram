@@ -34,14 +34,26 @@
         arr[i] = arr[j];
         arr[j] = element;
       });
-      return temporary.slice(0, quantity); // Ошибка возникает тут, без слайса до quantity все работает
-    },                                     // Но само-собой не обрезается и выдаются все посты вместо 10
+      return temporary.slice(0, quantity);
+    },
     getDiscussedPosts: function (data) {
       var temporary = data.slice();
       temporary.sort(function (left, right) {
         return right.comments.length - left.comments.length;
-      })
+      });
       return temporary;
+    },
+    debounce: function (fun) {
+      var lastTimeout = null;
+      return function () {
+        var args = arguments;
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(function () {
+          fun.apply(null, args);
+        }, 500);
+      };
     }
   };
 })();
