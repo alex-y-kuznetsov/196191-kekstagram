@@ -26,6 +26,34 @@
       node.style.fontSize = '30px';
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
+    },
+    getNewPosts: function (data, quantity) {
+      var temporary = data.slice();
+      temporary.forEach(function (element, i, arr) {
+        var j = window.utils.getRandomNumber(0, i);
+        arr[i] = arr[j];
+        arr[j] = element;
+      });
+      return temporary.slice(0, quantity);
+    },
+    getDiscussedPosts: function (data) {
+      var temporary = data.slice();
+      temporary.sort(function (left, right) {
+        return right.comments.length - left.comments.length;
+      });
+      return temporary;
+    },
+    debounce: function (fun) {
+      var lastTimeout = null;
+      return function () {
+        var args = arguments;
+        if (lastTimeout) {
+          window.clearTimeout(lastTimeout);
+        }
+        lastTimeout = window.setTimeout(function () {
+          fun.apply(null, args);
+        }, 500);
+      };
     }
   };
 })();
