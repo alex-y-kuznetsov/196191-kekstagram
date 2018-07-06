@@ -61,7 +61,7 @@
     pictureScale = 1;
     uploadPreview.style = 'transform: scale(1)';
     var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-    var file = uploadPicture.files[0];
+    var file = window.uploadPicture.files[0];
     var fileName = file.name.toLowerCase();
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
@@ -74,7 +74,7 @@
       reader.readAsDataURL(file);
     }
   };
-  uploadPicture.addEventListener('change', pictureUploadHandler);
+  window.uploadPicture.addEventListener('change', pictureUploadHandler);
 
   // Наложение эффекта на изображение
   var pictureEffectsContainer = pictureEditor.querySelector('.img-upload__effects');
