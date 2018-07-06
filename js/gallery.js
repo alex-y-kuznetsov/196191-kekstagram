@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  // var MAX_POSTS = 25;
-  var ESC_KEY = 27;
   var postTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var similarListElement = document.querySelector('.pictures');
   var bigPicture = document.querySelector('.big-picture');
@@ -11,7 +9,6 @@
   var socialLoadMore = document.querySelector('.social__loadmore');
   var bigPictureClose = bigPicture.querySelector('.big-picture__cancel');
   var sortByBlock = document.querySelector('.img-filters');
-  // var picturePreview = document.querySelectorAll('.picture__link');
 
   // Создание обработчиков
   var openBigPictureHandler = function (evt) {
@@ -27,7 +24,7 @@
   };
 
   var escBigPictureHandler = function (evt) {
-    if (evt.keyCode === ESC_KEY) {
+    if (window.utils.isEscKey(evt)) {
       window.utils.addHidden(bigPicture);
     }
   };

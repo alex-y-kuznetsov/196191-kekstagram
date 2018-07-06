@@ -2,6 +2,10 @@
 
 (function () {
   window.utils = {
+    isEscKey: function (evt) {
+      var ESC_KEY = 27;
+      return evt.keyCode === ESC_KEY;
+    },
     getRandomFromArr: function (arr) {
       return arr[Math.floor(Math.random() * (arr.length - 0)) + 0];
     },
@@ -26,6 +30,10 @@
       node.style.fontSize = '30px';
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
+    },
+    resetFormValidity: function (form) {
+      form.setCustomValidity('');
+      form.style.outline = 'none';
     },
     getNewPosts: function (data, quantity) {
       var temporary = data.slice();

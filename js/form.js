@@ -1,7 +1,6 @@
 'use strict';
 
 (function () {
-  var ESC_KEY = 27;
   window.uploadPicture = document.querySelector('#upload-file');
   var pictureEditor = document.querySelector('.img-upload__overlay');
   var pictureEditorClose = document.querySelector('.img-upload__cancel');
@@ -13,6 +12,7 @@
     window.utils.removeHidden(pictureEditor);
     resetScale();
     document.addEventListener('keydown', escPictureEditorHandler);
+    window.utils.resetFormValidity(hashtagInput);
   };
 
   var closePictureEditorHandler = function () {
@@ -22,7 +22,7 @@
   };
 
   var escPictureEditorHandler = function (evt) {
-    if (evt.keyCode === ESC_KEY && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
+    if (window.utils.isEscKey(evt) && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
       window.utils.addHidden(pictureEditor);
     }
   };
@@ -30,12 +30,13 @@
   window.uploadPicture.addEventListener('change', openPictureEditorHandler);
   pictureEditorClose.addEventListener('click', closePictureEditorHandler);
 
-  // Изменение размера изображения
+  // Работа с превью
   var sizeMinus = pictureEditor.querySelector('.resize__control--minus');
   var sizePlus = pictureEditor.querySelector('.resize__control--plus');
   var uploadPreview = pictureEditor.querySelector('.img-upload__preview');
   var previewImage = pictureEditor.querySelector('.img-upload__preview > img');
 
+  // Изменение размера превью
   var pictureScale = 1;
   var sizeMinusHandler = function () {
     if (pictureScale > 0.25) {
@@ -55,6 +56,26 @@
   sizeMinus.addEventListener('click', sizeMinusHandler);
   sizePlus.addEventListener('click', sizePlusHandler);
 
+  // Загрузка превью
+  var pictureUploadHandler = function () {
+    pictureScale = 1;
+    uploadPreview.style = 'transform: scale(1)';
+    var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
+    var file = uploadPicture.files[0];
+    var fileName = file.name.toLowerCase();
+    var matches = FILE_TYPES.some(function (it) {
+      return fileName.endsWith(it);
+    });
+    if (matches) {
+      var reader = new FileReader();
+      reader.addEventListener('load', function () {
+        previewImage.src = reader.result;
+      });
+      reader.readAsDataURL(file);
+    }
+  };
+  uploadPicture.addEventListener('change', pictureUploadHandler);
+
   // Наложение эффекта на изображение
   var pictureEffectsContainer = pictureEditor.querySelector('.img-upload__effects');
 
@@ -70,7 +91,6 @@
       previewImage.className = 'effects__preview--' + evt.target.value;
     }
   };
-
   pictureEffectsContainer.addEventListener('click', pictureFilterHandler);
 
   // Определение глубины эффекта
@@ -199,8 +219,7 @@
     window.backend.upload(new FormData(postForm), successHandler, errorHandler);
   };
   var hashtagChangeHandler = function () {
-    hashtagInput.setCustomValidity('');
-    hashtagInput.style.outline = 'none';
+    window.utils.resetFormValidity(hashtagInput);
   };
 
   hashtagInput.addEventListener('change', hashtagChangeHandler);
