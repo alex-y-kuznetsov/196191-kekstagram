@@ -30,6 +30,9 @@
       node.style.fontSize = '30px';
       node.textContent = errorMessage;
       document.body.insertAdjacentElement('afterbegin', node);
+      window.setTimeout(function () {
+        node.remove();
+      }, 5000);
     },
     resetFormValidity: function (form) {
       form.setCustomValidity('');

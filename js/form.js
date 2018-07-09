@@ -72,6 +72,9 @@
         previewImage.src = reader.result;
       });
       reader.readAsDataURL(file);
+    } else {
+      window.utils.addHidden(pictureEditor);
+      window.utils.createErrorMessage('Неверный формат файла');
     }
   };
   window.uploadPicture.addEventListener('change', pictureUploadHandler);
@@ -218,8 +221,9 @@
     validateHashtags();
     if (!postForm.checkValidity()) {
       postForm.reportValidity();
+    } else {
+      window.backend.upload(new FormData(postForm), successHandler, errorHandler);
     }
-    window.backend.upload(new FormData(postForm), successHandler, errorHandler);
   };
   var hashtagChangeHandler = function () {
     window.utils.resetFormValidity(hashtagInput);
