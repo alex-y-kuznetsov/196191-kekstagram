@@ -53,6 +53,7 @@
 
     var picturePreview = document.querySelectorAll('.picture__link');
     for (var j = 0; j < picturePreview.length; j++) {
+      picturePreview[j].dataset.indexNumber = j;
       picturePreview[j].addEventListener('click', openBigPictureHandler);
     }
   };
@@ -96,8 +97,8 @@
   // Отрисовка Big Picture
   var renderBigPicture = function (evt) {
     window.utils.removeHidden(bigPicture);
-    var pictureIndex = evt.target.dataset.indexNumber;
-    bigPicture.querySelector('.big-picture__img img').src = evt.target.src;
+    var pictureIndex = +evt.currentTarget.dataset.indexNumber;
+    bigPicture.querySelector('.big-picture__img img').src = 'photos/' + (pictureIndex + 1) + '.jpg';
     bigPicture.querySelector('.likes-count').textContent = posts[pictureIndex].likes;
     bigPicture.querySelector('.comments-count').textContent = posts[pictureIndex].comments.length;
     bigPicture.querySelector('.social__caption').textContent = posts[pictureIndex].comments[0];

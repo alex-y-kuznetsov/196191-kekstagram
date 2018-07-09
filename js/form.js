@@ -176,6 +176,9 @@
 
   // Валидация хэштегов
   var validateHashtags = function () {
+    if (!hashtagInput.value) {
+      return;
+    }
     var hashtagsArr = hashtagInput.value.split(' ');
     for (var i = 0; i < hashtagsArr.length; i++) {
       if (hashtagsArr[i].charAt(0) !== '#') {
