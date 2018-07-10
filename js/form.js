@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var SCALE_WIDTH = 453;
   window.uploadPicture = document.querySelector('#upload-file');
   var pictureEditor = document.querySelector('.img-upload__overlay');
   var pictureEditorClose = document.querySelector('.img-upload__cancel');
@@ -18,7 +19,7 @@
   var closePictureEditorHandler = function () {
     window.utils.addHidden(pictureEditor);
     pictureEditorClose.removeEventListener('keydown', escPictureEditorHandler);
-    window.uploadPicture.innerHtml = '';
+    window.uploadPicture.value = '';
   };
 
   var escPictureEditorHandler = function (evt) {
@@ -97,7 +98,6 @@
   pictureEffectsContainer.addEventListener('click', pictureFilterHandler);
 
   // Определение глубины эффекта
-  var SCALE_WIDTH = 453;
   var effectsScale = pictureEditor.querySelector('.img-upload__scale');
   var scalePin = pictureEditor.querySelector('.scale__pin');
   var scaleLine = pictureEditor.querySelector('.scale__line');
@@ -147,7 +147,7 @@
       scaleLevel.style.width = scalePinLeft + 'px';
 
       // Apply effect here
-      scaleValue.value = parseFloat(scalePin.style.left);
+      scaleValue.setAttribute('value', Math.round(scalePinLeft));
       applyFilterDepth();
     };
 
@@ -210,7 +210,7 @@
 
   var successHandler = function () {
     window.utils.addHidden(pictureEditor);
-    window.uploadPicture.innerHtml = '';
+    window.uploadPicture.value = '';
   };
   var errorHandler = function (errorMessage) {
     window.utils.createErrorMessage(errorMessage);

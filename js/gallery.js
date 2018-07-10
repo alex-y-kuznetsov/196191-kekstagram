@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var NEW_POSTS_QUANTITY = 10;
   var postTemplate = document.querySelector('#picture').content.querySelector('.picture__link');
   var similarListElement = document.querySelector('.pictures');
   var bigPicture = document.querySelector('.big-picture');
@@ -67,7 +68,6 @@
   };
 
   // Фильтрация постов
-  var NEW_POSTS_QUANTITY = 10;
   var sortByModes = sortByBlock.querySelectorAll('.img-filters__button');
   var updatePosts = function (sortByMode) {
     switch (sortByMode.id) {
