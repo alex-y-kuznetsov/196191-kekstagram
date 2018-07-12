@@ -54,7 +54,7 @@
     var picturePreview = document.querySelectorAll('.picture__link');
     for (var j = 0; j < picturePreview.length; j++) {
       // picturePreview[j].dataset.indexNumber = j;
-      picturePreview[j].dataset.indexNumber = parseInt(picturePreview[j].children[0].src.replace(/\D+/g,'')) - 1;
+      picturePreview[j].dataset.indexNumber = +picturePreview[j].children[0].src.replace(/\D+/g, '') - 1;
       picturePreview[j].addEventListener('click', openBigPictureHandler);
     }
   };
