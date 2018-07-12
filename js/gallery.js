@@ -20,7 +20,7 @@
 
   var closeBigPictureHandler = function () {
     window.utils.addHidden(bigPicture);
-    docment.removeEventListener('keydown', escBigPictureHandler);
+    document.removeEventListener('keydown', escBigPictureHandler);
   };
 
   var escBigPictureHandler = function (evt) {

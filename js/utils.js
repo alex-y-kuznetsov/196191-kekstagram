@@ -29,11 +29,6 @@
         elem.querySelector('#effect-none').setAttribute('checked', 'checked');
       }
     },
-    createXMLHttpRequest: function () {
-      window.xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-      return xhr;
-    },
     createErrorMessage: function (errorMessage) {
       var node = document.createElement('div');
       node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
@@ -55,7 +50,7 @@
       errorElement.style.zIndex = '10';
       window.setTimeout(function () {
         window.utils.addHidden(errorElement);
-      }, ERROR_DELAY)
+      }, ERROR_DELAY);
     },
     resetFormValidity: function (form) {
       form.setCustomValidity('');
