@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var ERROR_DELAY = 5000;
+  var DEBOUNCE_DELAY = 500;
   window.utils = {
     isEscKey: function (evt) {
       var ESC_KEY = 27;
@@ -21,6 +23,17 @@
     addVisuallyHidden: function (elem) {
       elem.classList.add('visually-hidden');
     },
+    resetChecked: function (elem) {
+      if (elem.querySelector('input[checked]')) {
+        elem.querySelector('input[checked]').removeAttribute('checked');
+        elem.querySelector('#effect-none').setAttribute('checked', 'checked');
+      }
+    },
+    createXMLHttpRequest: function () {
+      window.xhr = new XMLHttpRequest();
+      xhr.responseType = 'json';
+      return xhr;
+    },
     createErrorMessage: function (errorMessage) {
       var node = document.createElement('div');
       node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
@@ -32,7 +45,17 @@
       document.body.insertAdjacentElement('afterbegin', node);
       window.setTimeout(function () {
         node.remove();
-      }, 5000);
+      }, ERROR_DELAY);
+    },
+    createUploadErrorMessage: function () {
+      var errorTemplate = document.querySelector('#picture').content.querySelector('.img-upload__message--error');
+      var errorElement = errorTemplate.cloneNode(true);
+      document.body.appendChild(errorElement);
+      window.utils.removeHidden(errorElement);
+      errorElement.style.zIndex = '10';
+      window.setTimeout(function () {
+        window.utils.addHidden(errorElement);
+      }, ERROR_DELAY)
     },
     resetFormValidity: function (form) {
       form.setCustomValidity('');
@@ -63,7 +86,7 @@
         }
         lastTimeout = window.setTimeout(function () {
           fun.apply(null, args);
-        }, 500);
+        }, DEBOUNCE_DELAY);
       };
     }
   };

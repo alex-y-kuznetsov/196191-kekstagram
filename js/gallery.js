@@ -20,8 +20,7 @@
 
   var closeBigPictureHandler = function () {
     window.utils.addHidden(bigPicture);
-    bigPictureClose.removeEventListener('keydown', escBigPictureHandler);
-    window.uploadPicture.innerHtml = '';
+    docment.removeEventListener('keydown', escBigPictureHandler);
   };
 
   var escBigPictureHandler = function (evt) {

@@ -5,8 +5,9 @@
   var UPLOAD_URL = 'https://js.dump.academy/kekstagram';
   window.backend = {
     download: function (onLoad, onError) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
+      // var xhr = new XMLHttpRequest();
+      // xhr.responseType = 'json';
+      window.utils.createXMLHttpRequest();
       xhr.open('GET', DOWNLOAD_URL);
 
       xhr.addEventListener('load', function () {
@@ -27,9 +28,9 @@
       xhr.send();
     },
     upload: function (data, onLoad, onError) {
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'json';
-
+      // var xhr = new XMLHttpRequest();
+      // xhr.responseType = 'json';
+      window.utils.createXMLHttpRequest();
       xhr.addEventListener('load', function () {
         switch (xhr.status) {
           case 200:

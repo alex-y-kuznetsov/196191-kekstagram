@@ -2,7 +2,7 @@
 
 (function () {
   var SCALE_WIDTH = 453;
-  window.uploadPicture = document.querySelector('#upload-file');
+  var uploadPicture = document.querySelector('#upload-file');
   var pictureEditor = document.querySelector('.img-upload__overlay');
   var pictureEditorClose = document.querySelector('.img-upload__cancel');
   var sizeValue = pictureEditor.querySelector('.resize__control--value');
@@ -14,12 +14,13 @@
     resetScale();
     document.addEventListener('keydown', escPictureEditorHandler);
     window.utils.resetFormValidity(hashtagInput);
+    window.utils.resetChecked(pictureEditor);
   };
 
   var closePictureEditorHandler = function () {
     window.utils.addHidden(pictureEditor);
     pictureEditorClose.removeEventListener('keydown', escPictureEditorHandler);
-    window.uploadPicture.value = '';
+    uploadPicture.value = '';
   };
 
   var escPictureEditorHandler = function (evt) {
@@ -28,7 +29,7 @@
     }
   };
 
-  window.uploadPicture.addEventListener('change', openPictureEditorHandler);
+  uploadPicture.addEventListener('change', openPictureEditorHandler);
   pictureEditorClose.addEventListener('click', closePictureEditorHandler);
 
   // Работа с превью
@@ -36,6 +37,7 @@
   var sizePlus = pictureEditor.querySelector('.resize__control--plus');
   var uploadPreview = pictureEditor.querySelector('.img-upload__preview');
   var previewImage = pictureEditor.querySelector('.img-upload__preview > img');
+  var previewFiltersImage = pictureEditor.querySelectorAll('.effects__preview');
 
   // Изменение размера превью
   var pictureScale = 1;
@@ -62,7 +64,7 @@
     pictureScale = 1;
     uploadPreview.style = 'transform: scale(1)';
     var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-    var file = window.uploadPicture.files[0];
+    var file = uploadPicture.files[0];
     var fileName = file.name.toLowerCase();
     var matches = FILE_TYPES.some(function (it) {
       return fileName.endsWith(it);
@@ -71,6 +73,9 @@
       var reader = new FileReader();
       reader.addEventListener('load', function () {
         previewImage.src = reader.result;
+        for (var l = 0; l < previewFiltersImage.length; l++) {
+          previewFiltersImage[l].style.backgroundImage = 'url(' + previewImage.src + ')';
+        }
       });
       reader.readAsDataURL(file);
     } else {
@@ -78,7 +83,7 @@
       window.utils.createErrorMessage('Неверный формат файла');
     }
   };
-  window.uploadPicture.addEventListener('change', pictureUploadHandler);
+  uploadPicture.addEventListener('change', pictureUploadHandler);
 
   // Наложение эффекта на изображение
   var pictureEffectsContainer = pictureEditor.querySelector('.img-upload__effects');
@@ -147,7 +152,7 @@
       scaleLevel.style.width = scalePinLeft + 'px';
 
       // Apply effect here
-      scaleValue.setAttribute('value', Math.round(scalePinLeft));
+      scaleValue.value = Math.round(scalePinLeft);
       applyFilterDepth();
     };
 
@@ -210,10 +215,12 @@
 
   var successHandler = function () {
     window.utils.addHidden(pictureEditor);
-    window.uploadPicture.value = '';
+    uploadPicture.value = '';
+    hashtagInput.value = '';
+    commentInput.value = '';
   };
-  var errorHandler = function (errorMessage) {
-    window.utils.createErrorMessage(errorMessage);
+  var errorHandler = function () {
+    window.utils.createUploadErrorMessage();
   };
 
   var postSubmitHandler = function (evt) {
