@@ -24,10 +24,16 @@
       elem.classList.add('visually-hidden');
     },
     resetChecked: function (elem) {
-      if (elem.querySelector('input[checked]')) {
-        elem.querySelector('input[checked]').removeAttribute('checked');
-        elem.querySelector('#effect-none').setAttribute('checked', 'checked');
+      var checkedRadio = elem.querySelector('input[checked]');
+      if (checkedRadio) {
+        checkedRadio.checked = false;
+        elem.querySelector('#effect-none').checked = true;
       }
+    },
+    resetForm: function (inputOne, inputTwo, inputThree) {
+      inputOne.value = '';
+      inputTwo.value = '';
+      inputThree.value = '';
     },
     createErrorMessage: function (errorMessage) {
       var node = document.createElement('div');

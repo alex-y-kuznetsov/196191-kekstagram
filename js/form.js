@@ -20,12 +20,13 @@
   var closePictureEditorHandler = function () {
     window.utils.addHidden(pictureEditor);
     pictureEditorClose.removeEventListener('keydown', escPictureEditorHandler);
-    uploadPicture.value = '';
+    window.utils.resetForm(uploadPicture, hashtagInput, commentInput);
   };
 
   var escPictureEditorHandler = function (evt) {
     if (window.utils.isEscKey(evt) && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
       window.utils.addHidden(pictureEditor);
+      window.utils.resetForm(uploadPicture, hashtagInput, commentInput);
     }
   };
 
@@ -215,9 +216,7 @@
 
   var successHandler = function () {
     window.utils.addHidden(pictureEditor);
-    uploadPicture.value = '';
-    hashtagInput.value = '';
-    commentInput.value = '';
+    window.utils.resetForm(uploadPicture, hashtagInput, commentInput);
   };
   var errorHandler = function () {
     window.utils.createUploadErrorMessage();
