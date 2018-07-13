@@ -53,8 +53,7 @@
 
     var picturePreview = document.querySelectorAll('.picture__link');
     for (var j = 0; j < picturePreview.length; j++) {
-      // picturePreview[j].dataset.indexNumber = j;
-      picturePreview[j].dataset.indexNumber = +picturePreview[j].children[0].src.replace(/\D+/g, '') - 1;
+      picturePreview[j].dataset.indexNumber = j;
       picturePreview[j].addEventListener('click', openBigPictureHandler);
     }
   };
@@ -64,20 +63,23 @@
   var successHandler = function (response) {
     posts = response;
     renderPosts(posts);
+    updatedPosts = posts;
     sortByBlock.classList.remove('img-filters--inactive');
   };
 
   // Фильтрация постов
   var sortByModes = sortByBlock.querySelectorAll('.img-filters__button');
+  var updatedPosts = [];
   var updatePosts = function (sortByMode) {
     switch (sortByMode.id) {
-      case 'filter-popular': renderPosts(posts);
+      case 'filter-popular': updatedPosts = posts;
         break;
-      case 'filter-new': renderPosts(window.utils.getNewPosts(posts, NEW_POSTS_QUANTITY));
+      case 'filter-new': updatedPosts = window.utils.getNewPosts(posts, NEW_POSTS_QUANTITY);
         break;
-      case 'filter-discussed': renderPosts(window.utils.getDiscussedPosts(posts));
+      case 'filter-discussed': updatedPosts = window.utils.getDiscussedPosts(posts);
         break;
     }
+    renderPosts(updatedPosts);
   };
 
   var changeSortModeHandler = window.utils.debounce(function (evt) {
@@ -98,10 +100,10 @@
   var renderBigPicture = function (evt) {
     window.utils.removeHidden(bigPicture);
     var pictureIndex = +evt.currentTarget.dataset.indexNumber;
-    bigPicture.querySelector('.big-picture__img img').src = 'photos/' + (pictureIndex + 1) + '.jpg';
-    bigPicture.querySelector('.likes-count').textContent = posts[pictureIndex].likes;
-    bigPicture.querySelector('.comments-count').textContent = posts[pictureIndex].comments.length;
-    bigPicture.querySelector('.social__caption').textContent = posts[pictureIndex].comments[0];
+    bigPicture.querySelector('.big-picture__img img').src = updatedPosts[pictureIndex].url;
+    bigPicture.querySelector('.likes-count').textContent = updatedPosts[pictureIndex].likes;
+    bigPicture.querySelector('.comments-count').textContent = updatedPosts[pictureIndex].comments.length;
+    bigPicture.querySelector('.social__caption').textContent = updatedPosts[pictureIndex].comments[0];
 
     // Удаляем старые комментарии
     var commentsToRemove = commentsContainer.querySelectorAll('.social__comment');
@@ -111,10 +113,10 @@
 
     // Отображаем новые комментарии
     var maxRenderedComments;
-    if (posts[pictureIndex].comments.length > 5) {
+    if (updatedPosts[pictureIndex].comments.length > 5) {
       maxRenderedComments = 5;
     } else {
-      maxRenderedComments = posts[pictureIndex].comments.length;
+      maxRenderedComments = updatedPosts[pictureIndex].comments.length;
     }
     for (var i = 0; i < maxRenderedComments; i++) {
       var newComment = document.createElement('li');
@@ -131,7 +133,7 @@
 
       var newCommentText = document.createElement('p');
       newCommentText.classList.add('social__text');
-      newCommentText.textContent = posts[pictureIndex].comments[i];
+      newCommentText.textContent = updatedPosts[pictureIndex].comments[i];
       newComment.appendChild(newCommentText);
     }
   };
