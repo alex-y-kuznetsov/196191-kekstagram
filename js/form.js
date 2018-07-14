@@ -19,7 +19,7 @@
 
   var closePictureEditorHandler = function () {
     window.utils.addHidden(pictureEditor);
-    pictureEditorClose.removeEventListener('keydown', escPictureEditorHandler);
+    document.removeEventListener('keydown', escPictureEditorHandler);
     window.utils.resetForm(uploadPicture, hashtagInput, commentInput);
   };
 
@@ -27,6 +27,7 @@
     if (window.utils.isEscKey(evt) && !evt.target.classList.contains('text__hashtags') && !evt.target.classList.contains('text__description')) {
       window.utils.addHidden(pictureEditor);
       window.utils.resetForm(uploadPicture, hashtagInput, commentInput);
+      document.removeEventListener('keydown', escPictureEditorHandler);
     }
   };
 
@@ -229,6 +230,7 @@
       postForm.reportValidity();
     } else {
       window.backend.upload(new FormData(postForm), successHandler, errorHandler);
+      document.removeEventListener('keydown', escPictureEditorHandler);
     }
   };
   var hashtagChangeHandler = function () {

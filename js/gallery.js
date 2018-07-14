@@ -26,6 +26,7 @@
   var escBigPictureHandler = function (evt) {
     if (window.utils.isEscKey(evt)) {
       window.utils.addHidden(bigPicture);
+      document.removeEventListener('keydown', escBigPictureHandler);
     }
   };
 
